@@ -6,7 +6,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
 
 #수와 계산
-print(10 + 5)   #15
+print(10 + 5)   #15  
 print(10 - 5)	#5
 print(10 * 5)	#50
 print(10 / 5)	#2.0
