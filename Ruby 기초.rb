@@ -183,7 +183,7 @@ module File
   def a()
     return 'a'
   end
-end 
+end
 
 require_relative 'File'
 puts(file1.def())
@@ -215,3 +215,307 @@ c1 = C.new(10)
 # p c1.value
 # c1.value = 20
 c1.show()
+
+
+#상속
+class Class1
+  def method1()
+    return 'm1'
+  end
+end
+c1 = Class1.new()
+p c1, c1.method1()
+
+class Class2 < Class1
+  def method2
+    return 'm2'
+  end
+end
+c2 = Class2.new()
+p c2, c2.method1()    #m1
+p c2, c2.method2()    #m2
+
+
+#계산기 예제
+class Cal
+  attr_reader :v1, :v2
+  attr_writer :v1
+  def initialize(v1,v2)
+    @v1 = v1
+    @v2 = v2
+  end
+  def add()
+    return @v1+@v2
+  end
+  def subtract()
+    return @v1-@v2
+  end
+  def setV1(v)
+    if v.is_a?(Integer)
+      @v1 = v
+    end
+  end
+  def getV1()
+    return @v1
+  end
+end
+class CalMultiply < Cal
+  def multiply()
+    return @v1*@v2
+  end
+end
+class CalDivide < CalMultiply
+  def divide()
+    return @v1/@v2
+  end
+end
+c1 = CalMultiply.new(10,10)
+p c1.add()
+p c1.multiply()
+c2 = CalDivide.new(20, 10)
+p c2, c2.add()
+p c2, c2.multiply()
+p c2, c2.divide()
+
+
+
+#클래스맴버
+require 'date'
+d1 = Date.new(2000, 1, 1)
+d2 = Date.new(2010, 1, 1)
+p d1.year()
+p d2.year()
+p Date.today()
+
+#클래스 메소드
+class Cs
+  def Cs.class_method()
+    p "Class method"
+  end
+  def instance_method()
+    p "Instance method"
+  end
+end
+i = Cs.new()
+Cs.class_method()
+i.instance_method()
+#Cs.instance_method() 오류발생 #클래스메소드는 클래스 소속으로만 사용
+#i.class_method() 오류발생    #인스턴스메소드는 인스턴스 소속으로만 사용
+
+#클래스 변수
+class Cs
+  @@count = 0         #@는 인스턴스변수 @@는 클래스변수
+  def initialize()
+    @@count = @@count + 1
+  end
+  def Cs.getCount()
+    return @@count
+  end
+end
+i1 = Cs.new()   #1
+i2 = Cs.new()   #2
+i3 = Cs.new()   #3
+i4 = Cs.new()   #4
+p Cs.getCount() #4
+
+
+#계산기 예제2
+class Cal
+  attr_reader :v1, :v2
+  attr_writer :v1
+  @@_history = []
+  def initialize(v1,v2)
+    @v1 = v1
+    @v2 = v2
+  end
+  def add()
+    result = @v1+@v2
+    @@_history.push("add : #{@v1}+#{@v2}=#{result}")
+    return result
+  end
+  def subtract()
+    result = @v1-@v2
+    @@_history.push("subtract : #{@v1}-#{@v2}=#{result}")
+    return result
+  end
+  def setV1(v)
+    if v.is_a?(Integer)
+      @v1 = v
+    end
+  end
+  def getV1()
+    return @v1
+  end
+  def Cal.history()
+    for item in @@_history
+      p item
+    end
+  end
+end
+class CalMultiply < Cal
+  def multiply()
+    result = @v1*@v2
+    @@_history.push("multipy : #{@v1}*#{@v2}=#{result}")
+    return result
+  end
+end
+class CalDivide < CalMultiply
+  def divide()
+    result = @v1/@v2
+    @@_history.push("divide : #{@v1}/#{@v2}=#{result}")
+    return result
+  end
+end
+c1 = CalMultiply.new(10,10)
+p c1.add()
+p c1.multiply()
+c2 = CalDivide.new(20, 10)
+p c2, c2.add()
+p c2, c2.multiply()
+p c2, c2.divide()
+Cal.history()
+
+
+#오버라이드
+class C1
+  def m()
+    return 'parent'
+  end
+end
+class C2 < C1
+  def m()
+    return super()+' child'
+  end
+end
+o = C2.new()
+p o.m()   #parent child
+
+#계산기예제3 오버라이드 상속
+class Cal
+  attr_reader :v1, :v2
+  attr_writer :v1
+  @@_history = []
+  def initialize(v1,v2)
+    @v1 = v1
+    @v2 = v2
+  end
+  def add()
+    result = @v1+@v2
+    @@_history.push("add : #{@v1}+#{@v2}=#{result}")
+    return result
+  end
+  def subtract()
+    result = @v1-@v2
+    @@_history.push("subtract : #{@v1}-#{@v2}=#{result}")
+    return result
+  end
+  def setV1(v)
+    if v.is_a?(Integer)
+      @v1 = v
+    end
+  end
+  def getV1()
+    return @v1
+  end
+  def Cal.history()
+    for item in @@_history
+      p item
+    end
+  end
+  def info()
+    return "Cal => v1 : #{@v1}, v2 : #{@v2}"
+  end
+end
+class CalMultiply < Cal
+  def multiply()
+    result = @v1*@v2
+    @@_history.push("multipy : #{@v1}*#{@v2}=#{result}")
+    return result
+  end
+  def info()
+    return "CalMultiply => #{super()}"
+  end
+end
+class CalDivide < CalMultiply
+  def divide()
+    result = @v1/@v2
+    @@_history.push("divide : #{@v1}/#{@v2}=#{result}")
+    return result
+  end
+  def info()
+    return "CalDivide => #{super()}"
+  end
+end
+c0 = Cal.new(30, 60)
+p c0.info()
+c1 = CalMultiply.new(10, 10)
+p c1.info()
+c2 = CalDivide.new(20, 10)
+p c2.info()
+
+#객체와 모듈
+
+#1.rb
+require_relative 'lib'
+obj = Lib::A.new()
+p obj.a()
+
+#lib.rb
+module Lib
+  class A
+    def a()
+      return 'a'
+    end
+  end
+end
+
+
+#Mixin
+module M1
+  def m1_m
+    p "m1_m"
+  end
+end
+module M2
+  def m2_m
+    p "m2_m"
+  end
+end
+class C
+  include M1, M2
+end
+c = C.new()
+c.m1_m()
+c.m2_m()
+
+
+#믹스인 활용
+module Multiply
+  def multiply()
+    return @v1*@v2
+  end
+end
+module Divide
+  def divide()
+    return @v1/@v2
+  end
+end
+class Cal
+  include Multiply,Divide
+  def initialize(v1,v2)
+    @v1 = v1
+    @v2 = v2
+  end
+  def add()
+    return @v1+@v2
+  end
+  def subtract()
+    return @v1-@v2
+  end
+end
+
+
+c = Cal.new(100,10)
+p c.add()
+p c.multiply()
+p c.divide()
